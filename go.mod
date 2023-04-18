@@ -7,13 +7,13 @@ require (
 	github.com/gogo/protobuf v1.3.2
 	github.com/robfig/cron v1.2.0
 	go.uber.org/zap v1.21.0
-	google.golang.org/protobuf v1.28.1
+	google.golang.org/protobuf v1.30.0
 
 )
 
 replace github.com/AlexStocks/getty v1.3.1 => github.com/chenxyzl/getty v1.3.12
 
-replace github.com/golang/protobuf v1.5.2 => google.golang.org/protobuf v1.28.1
+replace github.com/golang/protobuf v1.5.2 => google.golang.org/protobuf v1.30.0
 
 require (
 	github.com/Workiva/go-datastructures v1.0.53 // indirect
