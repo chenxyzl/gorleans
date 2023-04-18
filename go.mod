@@ -11,7 +11,7 @@ require (
 
 )
 
-replace github.com/AlexStocks/getty v1.3.1 => github.com/chenxyzl/getty v1.3.12
+//replace github.com/AlexStocks/getty v1.3.1 => github.com/chenxyzl/getty v1.3.12
 
 replace github.com/golang/protobuf v1.5.2 => google.golang.org/protobuf v1.30.0
 
