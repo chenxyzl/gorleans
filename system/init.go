@@ -36,7 +36,7 @@ type S struct {
 
 func init() {
 	s = &S{}
-	s.status = stateRunning
+	s.status = stateInit
 	arg0, err := exec.LookPath(os.Args[0])
 	if err != nil {
 		logger.Panic(err)
