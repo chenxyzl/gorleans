@@ -1,4 +1,4 @@
-package safecall
+package shared
 
 import (
 	"errors"
