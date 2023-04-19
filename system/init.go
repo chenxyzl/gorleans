@@ -64,13 +64,15 @@ func (a *S) createPid() {
 	if err != nil {
 		logger.Panic(err)
 	}
+	logger.Infof("create pid, pid:%v", s.pid)
 }
 
-func (a *S) remotePid() {
+func (a *S) removePid() {
 	if a.pid != "" {
 		err := os.Remove(a.pid)
 		if err != nil {
 			logger.Error(err)
 		}
+		logger.Infof("remove pid, pid:%v", s.pid)
 	}
 }

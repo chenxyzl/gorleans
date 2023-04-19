@@ -16,7 +16,7 @@ func Init() {
 	s.createPid()
 }
 func Clean() {
-	s.remotePid()
+	s.removePid()
 }
 
 func Run(clusterName string, remoteUrl string, etcdBaseKey string, etcdUrl []string, options ...cluster.ConfigOption) {
