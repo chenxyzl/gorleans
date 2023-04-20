@@ -4,16 +4,10 @@ go 1.19
 
 require (
 	github.com/asynkron/protoactor-go v0.0.0-20230414121700-22ab527f4f7a
-	github.com/gogo/protobuf v1.3.2
 	github.com/robfig/cron v1.2.0
 	go.uber.org/zap v1.21.0
-	google.golang.org/protobuf v1.30.0
-
+	google.golang.org/protobuf v1.28.1
 )
-
-//replace github.com/AlexStocks/getty v1.3.1 => github.com/chenxyzl/getty v1.3.12
-
-replace github.com/golang/protobuf v1.5.2 => google.golang.org/protobuf v1.30.0
 
 require (
 	github.com/Workiva/go-datastructures v1.0.53 // indirect
@@ -25,6 +19,7 @@ require (
 	github.com/emirpasic/gods v1.18.1 // indirect
 	github.com/go-logr/logr v1.2.3 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
+	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/golang/protobuf v1.5.3 // indirect
 	github.com/google/uuid v1.3.0 // indirect
 	github.com/lithammer/shortuuid/v4 v4.0.0 // indirect
