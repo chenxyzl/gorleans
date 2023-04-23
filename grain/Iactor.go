@@ -6,7 +6,7 @@ import (
 )
 
 type INext interface {
-	Next(fun ...func(context actor.Context))
+	Next(fun func(context actor.Context))
 }
 
 type IGrainActor interface {

@@ -45,8 +45,8 @@ func (a *LocalActor) Receive(ctx actor.Context) {
 	}
 }
 
-func (a *LocalActor) Next(f ...func(ctx actor.Context)) {
-	a.nextFunc = append(a.nextFunc, f...)
+func (a *LocalActor) Next(f func(ctx actor.Context)) {
+	a.nextFunc = append(a.nextFunc, f)
 	system.GetSchedule().SendOnce(0, a.ctx.Self(), &pb.NextStep{})
 }
 func (a *LocalActor) handleNextStep(ctx actor.Context) {

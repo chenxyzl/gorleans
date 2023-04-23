@@ -56,8 +56,8 @@ func (a *GrainActor) Receive(ctx actor.Context) {
 	}
 }
 
-func (state *GrainActor) Next(f ...func(ctx actor.Context)) {
-	state.nextFunc = append(state.nextFunc, f...)
+func (state *GrainActor) Next(f func(ctx actor.Context)) {
+	state.nextFunc = append(state.nextFunc, f)
 	system.GetSchedule().SendOnce(0, state.ctx.Self(), &pb.NextStep{})
 }
 func (state *GrainActor) handleNextStep(ctx actor.Context) {
