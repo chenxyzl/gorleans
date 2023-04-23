@@ -6,6 +6,7 @@ import (
 	"github.com/asynkron/protoactor-go/cluster/clusterproviders/etcd"
 	"github.com/asynkron/protoactor-go/cluster/identitylookup/disthash"
 	"github.com/asynkron/protoactor-go/remote"
+	"github.com/asynkron/protoactor-go/scheduler"
 	"github.com/chenxyzl/gorleans/logger"
 	"github.com/robfig/cron"
 	_ "net/http/pprof"
@@ -25,6 +26,7 @@ func Run(clusterName string, remoteUrl string, etcdBaseKey string, etcdUrl []str
 	}
 	s.status = stateRunning
 	s.system = actor.NewActorSystem()
+	s.schedule = scheduler.NewTimerScheduler(s.system.Root)
 	//provider, err := etcd.NewWithConfig(etcdBaseKey, clientv3.Config{
 	//	Endpoints:   etcdUrl,
 	//	DialTimeout: time.Second * 5,

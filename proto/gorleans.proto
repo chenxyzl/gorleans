@@ -1,0 +1,6 @@
+syntax = "proto3";
+package pb;
+option  go_package = "github.com/chenxyzl/gorleans/pb";
+
+//解决重入问题~
+message NextStep{}

@@ -3,6 +3,7 @@ package system
 import (
 	"github.com/asynkron/protoactor-go/actor"
 	"github.com/asynkron/protoactor-go/cluster"
+	"github.com/asynkron/protoactor-go/scheduler"
 	"github.com/chenxyzl/gorleans/logger"
 )
 
@@ -29,6 +30,13 @@ func Cluster() *cluster.Cluster {
 		logger.Panicf("status error, status:%v", s.status)
 	}
 	return s.cluster
+}
+
+func GetSchedule() *scheduler.TimerScheduler {
+	if s.status != stateRunning {
+		logger.Panicf("status error, status:%v", s.status)
+	}
+	return s.schedule
 }
 
 func RegisterReloadFunc(f func()) {

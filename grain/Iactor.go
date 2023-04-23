@@ -5,7 +5,9 @@ import (
 	"github.com/asynkron/protoactor-go/cluster"
 )
 
-var xGrainFactory func() IGrainActor
+type INext interface {
+	Next(fun ...func(context actor.Context))
+}
 
 type IGrainActor interface {
 	Init(ctx cluster.GrainContext)

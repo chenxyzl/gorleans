@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/asynkron/protoactor-go/actor"
 	"github.com/asynkron/protoactor-go/cluster"
+	"github.com/asynkron/protoactor-go/scheduler"
 	"github.com/chenxyzl/gorleans/logger"
 	"github.com/chenxyzl/gorleans/shared"
 	"os"
@@ -22,8 +23,9 @@ const (
 var s *S
 
 type S struct {
-	system  *actor.ActorSystem
-	cluster *cluster.Cluster
+	system   *actor.ActorSystem
+	cluster  *cluster.Cluster
+	schedule *scheduler.TimerScheduler
 
 	status state
 
