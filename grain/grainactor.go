@@ -49,7 +49,7 @@ func (a *GrainActor) Receive(ctx actor.Context) {
 	case *cluster.GrainRequest:
 		a.inner.ReceiveDefault(a.ctx)
 	case *pb.NextStep:
-		logger.Debugf("actor:next", ctx.Self())
+		logger.Debugf("actor:next, actor:%v", ctx.Self())
 		a.handleNextStep(ctx)
 	default:
 		a.inner.ReceiveDefault(a.ctx)
