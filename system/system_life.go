@@ -59,8 +59,8 @@ func Tick(f func(timestamp int64)) *cron.Cron {
 	return cron2
 }
 
-func WaitStop(beforeQuitFunc func()) {
-	if s.status != stateRunning {
+func WaitStop(needRunning bool, beforeQuitFunc func()) {
+	if needRunning && s.status != stateRunning {
 		logger.Panicf("status error, status:%v", s.status)
 	}
 	//等待退出
