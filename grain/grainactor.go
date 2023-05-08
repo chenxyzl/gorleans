@@ -1,4 +1,4 @@
-package shared
+package grain
 
 import (
 	"github.com/asynkron/protoactor-go/actor"
