@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-func Recover(pc func()) {
+func Recover(pc func(e any)) {
 	if err := recover(); err != nil {
 		logger.Errorf("frame Err: %s", err)
 		for i := 0; i < 10; i++ {
@@ -23,7 +23,7 @@ func Recover(pc func()) {
 			}
 		}
 		if pc != nil {
-			pc()
+			pc(err)
 		}
 	}
 }
