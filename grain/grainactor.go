@@ -5,6 +5,7 @@ import (
 	"github.com/asynkron/protoactor-go/cluster"
 	"github.com/chenxyzl/gorleans/logger"
 	pb "github.com/chenxyzl/gorleans/proto"
+	"github.com/chenxyzl/gorleans/shared"
 	"github.com/chenxyzl/gorleans/system"
 	"time"
 )
@@ -27,6 +28,9 @@ func NewClusterKind(factory func(INext) IGrainActor, kindStr string, timeout tim
 
 // Receive ensures the lifecycle of the actor for the received message
 func (a *GrainActor) Receive(ctx actor.Context) {
+	//
+	shared.Recover(nil)
+	//
 	switch msg := ctx.Message().(type) {
 	case *actor.Started: // pass
 	case *cluster.ClusterInit:

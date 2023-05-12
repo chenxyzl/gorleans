@@ -4,6 +4,7 @@ import (
 	"github.com/asynkron/protoactor-go/actor"
 	"github.com/chenxyzl/gorleans/logger"
 	pb "github.com/chenxyzl/gorleans/proto"
+	"github.com/chenxyzl/gorleans/shared"
 	"github.com/chenxyzl/gorleans/system"
 )
 
@@ -25,6 +26,9 @@ func NewLocalKind(factory func(INext) ILocalActor, opts ...actor.PropsOption) *a
 }
 
 func (a *LocalActor) Receive(ctx actor.Context) {
+	//
+	shared.Recover(nil)
+	//
 	a.ctx = ctx
 	switch ctx.Message().(type) {
 	case *actor.Started:
