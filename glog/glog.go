@@ -22,7 +22,7 @@ func WithOptions(opts ...zap.Option) {
 }
 
 func NewWithOptions(opts ...zap.Option) *zap.SugaredLogger {
-	return sugar.Desugar().WithOptions(opts...).Sugar()
+	return sugar.Desugar().WithOptions(zap.AddCallerSkip(-1)).WithOptions(opts...).Sugar()
 }
 
 func With(args ...interface{}) {
@@ -30,7 +30,7 @@ func With(args ...interface{}) {
 }
 
 func NewWith(args ...interface{}) *zap.SugaredLogger {
-	return sugar.Desugar().Sugar().With(args...)
+	return sugar.Desugar().WithOptions(zap.AddCallerSkip(-1)).Sugar().With(args...)
 }
 
 // Debugf uses fmt.Sprintf to log a templated message.
