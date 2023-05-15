@@ -25,12 +25,12 @@ func NewWithOptions(opts ...zap.Option) *zap.SugaredLogger {
 	return sugar.Desugar().WithOptions(opts...).Sugar()
 }
 
-func WithFields(field ...zap.Field) {
-	sugar = sugar.Desugar().With(field...).Sugar()
+func With(args ...interface{}) {
+	sugar = sugar.With(args...)
 }
 
-func NewWithFields(field ...zap.Field) *zap.SugaredLogger {
-	return sugar.Desugar().With(field...).Sugar()
+func NewWith(args ...interface{}) *zap.SugaredLogger {
+	return sugar.Desugar().Sugar().With(args...)
 }
 
 // Debugf uses fmt.Sprintf to log a templated message.
