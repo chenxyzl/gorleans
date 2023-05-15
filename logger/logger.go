@@ -15,19 +15,17 @@ func init() {
 	sugar = l.Sugar()
 }
 
-func WithOptions(opts ...zap.Option) *zap.SugaredLogger {
+func WithOptions(opts ...zap.Option) {
 	// sugar= sugar.Desugar().WithOptions(zap.IncreaseLevel(level)).Sugar()
 	sugar = sugar.Desugar().WithOptions(opts...).Sugar()
-	return sugar
 }
 
 func NewWithOptions(opts ...zap.Option) *zap.SugaredLogger {
 	return sugar.Desugar().WithOptions(opts...).Sugar()
 }
 
-func WithFields(field ...zap.Field) *zap.SugaredLogger {
+func WithFields(field ...zap.Field) {
 	sugar = sugar.Desugar().With(field...).Sugar()
-	return sugar
 }
 
 func NewWithFields(field ...zap.Field) *zap.SugaredLogger {
