@@ -24,7 +24,7 @@ func waitStopSignal() {
 			//	// os.Exit(1)
 			//	logger.Errorf("app exit now by force...")
 			//})
-			// fmt.Println("app exit now...")
+			//fmt.Println("app exit now...")
 			logger.Infof("app exit now...")
 			return
 		}

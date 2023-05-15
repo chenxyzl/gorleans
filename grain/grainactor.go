@@ -1,6 +1,7 @@
 package grain
 
 import (
+	"fmt"
 	"github.com/asynkron/protoactor-go/actor"
 	"github.com/asynkron/protoactor-go/cluster"
 	"github.com/chenxyzl/gorleans/logger"
@@ -29,11 +30,12 @@ func NewClusterKind(factory func(INext) IGrainActor, kindStr string, timeout tim
 // Receive ensures the lifecycle of the actor for the received message
 func (a *GrainActor) Receive(ctx actor.Context) {
 	//
-	shared.Recover(nil)
+	shared.RecoverInfo(fmt.Errorf("msg:%v", ctx.Message()))
 	//
 	switch msg := ctx.Message().(type) {
 	case *actor.Started: // pass
 	case *cluster.ClusterInit:
+		logger.Debugf("GrainActor started:%v ", ctx.Self())
 		a.ctx = cluster.NewGrainContext(ctx, msg.Identity, msg.Cluster)
 		a.inner = a.xGrainFactory(a)
 		a.inner.Init(a.ctx)
@@ -46,6 +48,7 @@ func (a *GrainActor) Receive(ctx actor.Context) {
 	case *actor.PoisonPill:
 		ctx.Stop(ctx.Self())
 	case *actor.Stopped:
+		logger.Debugf("GrainActor stopped:%v ", ctx.Self())
 		a.inner.Terminate(a.ctx)
 	case actor.AutoReceiveMessage: // pass
 	case actor.SystemMessage: // pass
@@ -53,22 +56,21 @@ func (a *GrainActor) Receive(ctx actor.Context) {
 	case *cluster.GrainRequest:
 		a.inner.ReceiveDefault(a.ctx)
 	case *pb.NextStep:
-		logger.Debugf("actor:next, actor:%v", ctx.Self())
 		a.handleNextStep(ctx)
 	default:
 		a.inner.ReceiveDefault(a.ctx)
 	}
 }
 
-func (state *GrainActor) Next(f func(ctx actor.Context)) {
-	state.nextFunc = append(state.nextFunc, f)
-	system.GetSchedule().SendOnce(0, state.ctx.Self(), &pb.NextStep{})
+func (a *GrainActor) Next(f func(ctx actor.Context)) {
+	a.nextFunc = append(a.nextFunc, f)
+	system.GetSchedule().SendOnce(0, a.ctx.Self(), &pb.NextStep{})
 }
-func (state *GrainActor) handleNextStep(ctx actor.Context) {
+func (a *GrainActor) handleNextStep(ctx actor.Context) {
 	var list []func(context actor.Context)
-	if len(state.nextFunc) > 0 {
-		list = state.nextFunc[:]
-		state.nextFunc = nil
+	if len(a.nextFunc) > 0 {
+		list = a.nextFunc[:]
+		a.nextFunc = nil
 	}
 	for _, f := range list {
 		f(ctx)

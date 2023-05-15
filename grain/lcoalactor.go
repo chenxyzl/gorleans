@@ -1,6 +1,7 @@
 package grain
 
 import (
+	"fmt"
 	"github.com/asynkron/protoactor-go/actor"
 	"github.com/chenxyzl/gorleans/logger"
 	pb "github.com/chenxyzl/gorleans/proto"
@@ -27,22 +28,21 @@ func NewLocalKind(factory func(INext) ILocalActor, opts ...actor.PropsOption) *a
 
 func (a *LocalActor) Receive(ctx actor.Context) {
 	//
-	shared.Recover(nil)
+	shared.RecoverInfo(fmt.Errorf("msg:%v", ctx.Message()))
 	//
 	a.ctx = ctx
 	switch ctx.Message().(type) {
 	case *actor.Started:
-		logger.Debugf("actor:%v started", ctx.Self())
+		logger.Debugf("LocalActor started:%v", ctx.Self())
 		a.inner.Init(ctx)
 	case *actor.Stopping:
-		logger.Debugf("actor:%v stopping", ctx.Self())
+		logger.Debugf("LocalActor stopping:%v", ctx.Self())
 		a.inner.Terminate(ctx)
 	case *actor.Stopped:
-		logger.Debugf("actor:%v stopped", ctx.Self())
+		logger.Debugf("LocalActor stopped:%v ", ctx.Self())
 	case *actor.Restarting:
-		logger.Debugf("actor:%v restarting", ctx.Self())
+		logger.Debugf("LocalActor restarting:%v", ctx.Self())
 	case *pb.NextStep:
-		logger.Debugf("actor:next", ctx.Self())
 		a.handleNextStep(ctx)
 	default:
 		a.inner.ReceiveDefault(ctx)

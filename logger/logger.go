@@ -2,7 +2,6 @@ package logger
 
 import (
 	"go.uber.org/zap"
-	"go.uber.org/zap/zapcore"
 )
 
 var sugar *zap.SugaredLogger
@@ -16,8 +15,23 @@ func init() {
 	sugar = l.Sugar()
 }
 
-func ConfigLevel(level zapcore.Level) {
-	sugar = sugar.Desugar().WithOptions(zap.IncreaseLevel(level)).Sugar()
+func WithOptions(opts ...zap.Option) *zap.SugaredLogger {
+	// sugar= sugar.Desugar().WithOptions(zap.IncreaseLevel(level)).Sugar()
+	sugar = sugar.Desugar().WithOptions(opts...).Sugar()
+	return sugar
+}
+
+func NewWithOptions(opts ...zap.Option) *zap.SugaredLogger {
+	return sugar.Desugar().WithOptions(opts...).Sugar()
+}
+
+func WithFields(field ...zap.Field) *zap.SugaredLogger {
+	sugar = sugar.Desugar().With(field...).Sugar()
+	return sugar
+}
+
+func NewWithFields(field ...zap.Field) *zap.SugaredLogger {
+	return sugar.Desugar().With(field...).Sugar()
 }
 
 // Debugf uses fmt.Sprintf to log a templated message.

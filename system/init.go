@@ -51,7 +51,7 @@ func init() {
 }
 
 func callFuncSlice(fs []func()) {
-	defer shared.Recover(nil)
+	defer shared.Recover()
 	for _, f := range fs {
 		if f != nil {
 			f()

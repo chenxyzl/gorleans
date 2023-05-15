@@ -2,36 +2,41 @@ package shared
 
 import (
 	"github.com/chenxyzl/gorleans/logger"
-	"runtime"
-	"strings"
+	"runtime/debug"
+	"strconv"
 )
 
-func Recover(pc func(e any)) {
-	if err := recover(); err != nil {
-		logger.Errorf("frame Err: %s", err)
-		for i := 0; i < 10; i++ {
-			pc, file, line, ok := runtime.Caller(i)
-			if ok {
-				p := strings.Index(file, "/src/")
-				if p != -1 {
-					file = file[p+len("/src/"):]
-				}
-				logger.Errorf("frame %d:[func:%s,file:%s,line:%d]",
-					i, runtime.FuncForPC(pc).Name(), file, line)
-			} else {
-				break
-			}
-		}
-		if pc != nil {
+func Recover() {
+	err := recover()
+	if err != nil {
+		stackTrace := debug.Stack()
+		stackTraceAsRawStringLiteral := strconv.Quote(string(stackTrace))
+		logger.Errorf("err:%v|stackTrace:%v", err, stackTraceAsRawStringLiteral)
+	}
+}
+func RecoverFunc(pc func(err any)) {
+	if pc == nil {
+		Recover()
+	} else {
+		err := recover()
+		if err != nil {
+			stackTrace := debug.Stack()
+			stackTraceAsRawStringLiteral := strconv.Quote(string(stackTrace))
+			logger.Errorf("err:%v|stackTrace:%v", err, stackTraceAsRawStringLiteral)
 			pc(err)
 		}
 	}
 }
 
-func SafeCall(f func()) {
-	if f == nil {
-		return
+func RecoverInfo(info error) {
+	if info == nil {
+		Recover()
+	} else {
+		err := recover()
+		if err != nil {
+			stackTrace := debug.Stack()
+			stackTraceAsRawStringLiteral := strconv.Quote(string(stackTrace))
+			logger.Errorf("%v|err:%v|stackTrace:%v", info, err, stackTraceAsRawStringLiteral)
+		}
 	}
-	Recover(nil)
-	f()
 }
