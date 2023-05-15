@@ -1,6 +1,7 @@
-package logger
+package glog
 
 import (
+	"fmt"
 	"go.uber.org/zap"
 )
 
@@ -54,8 +55,10 @@ func Error(err error) error {
 }
 
 // Errorf uses fmt.Sprintf to log a templated message.
-func Errorf(template string, args ...interface{}) {
-	sugar.Errorf(template, args...)
+func Errorf(template string, args ...interface{}) error {
+	err := fmt.Errorf(template, args...)
+	sugar.Error(err)
+	return err
 }
 
 // Panic uses fmt.Sprintf to log a templated message, then panics.

@@ -1,7 +1,7 @@
 package shared
 
 import (
-	"github.com/chenxyzl/gorleans/logger"
+	"github.com/chenxyzl/gorleans/glog"
 	"runtime/debug"
 	"strconv"
 )
@@ -11,7 +11,7 @@ func Recover() {
 	if err != nil {
 		stackTrace := debug.Stack()
 		stackTraceAsRawStringLiteral := strconv.Quote(string(stackTrace))
-		logger.Errorf("err:%v|stackTrace:%v", err, stackTraceAsRawStringLiteral)
+		glog.Errorf("err:%v|stackTrace:%v", err, stackTraceAsRawStringLiteral)
 	}
 }
 
@@ -23,7 +23,7 @@ func RecoverInfo(info error) {
 		if err != nil {
 			stackTrace := debug.Stack()
 			stackTraceAsRawStringLiteral := strconv.Quote(string(stackTrace))
-			logger.Errorf("%v|err:%v|stackTrace:%v", info, err, stackTraceAsRawStringLiteral)
+			glog.Errorf("%v|err:%v|stackTrace:%v", info, err, stackTraceAsRawStringLiteral)
 		}
 	}
 }
@@ -36,7 +36,7 @@ func RecoverFunc(info error, pc func(err any)) {
 		if err != nil {
 			stackTrace := debug.Stack()
 			stackTraceAsRawStringLiteral := strconv.Quote(string(stackTrace))
-			logger.Errorf("%v|err:%v|stackTrace:%v", info, err, stackTraceAsRawStringLiteral)
+			glog.Errorf("%v|err:%v|stackTrace:%v", info, err, stackTraceAsRawStringLiteral)
 			pc(err)
 		}
 	}

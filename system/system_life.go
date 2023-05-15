@@ -7,7 +7,7 @@ import (
 	"github.com/asynkron/protoactor-go/cluster/identitylookup/disthash"
 	"github.com/asynkron/protoactor-go/remote"
 	"github.com/asynkron/protoactor-go/scheduler"
-	"github.com/chenxyzl/gorleans/logger"
+	"github.com/chenxyzl/gorleans/glog"
 	"github.com/robfig/cron"
 	_ "net/http/pprof"
 	"time"
@@ -22,7 +22,7 @@ func Clean() {
 
 func Run(clusterName string, remoteUrl string, etcdBaseKey string, etcdUrl []string, options ...cluster.ConfigOption) {
 	if s.status != stateInit {
-		logger.Panicf("status error, status:%v", s.status)
+		glog.Panicf("status error, status:%v", s.status)
 	}
 	s.status = stateRunning
 	s.system = actor.NewActorSystem()
@@ -61,7 +61,7 @@ func Tick(f func(timestamp int64)) *cron.Cron {
 
 func WaitStop(needRunning bool, beforeQuitFunc func()) {
 	if needRunning && s.status != stateRunning {
-		logger.Panicf("status error, status:%v", s.status)
+		glog.Panicf("status error, status:%v", s.status)
 	}
 	//等待退出
 	waitStopSignal()

@@ -3,7 +3,7 @@ package grain
 import (
 	"fmt"
 	"github.com/asynkron/protoactor-go/actor"
-	"github.com/chenxyzl/gorleans/logger"
+	"github.com/chenxyzl/gorleans/glog"
 	pb "github.com/chenxyzl/gorleans/proto"
 	"github.com/chenxyzl/gorleans/shared"
 	"github.com/chenxyzl/gorleans/system"
@@ -33,15 +33,15 @@ func (a *LocalActor) Receive(ctx actor.Context) {
 	a.ctx = ctx
 	switch ctx.Message().(type) {
 	case *actor.Started:
-		logger.Debugf("LocalActor started:%v", ctx.Self())
+		glog.Debugf("LocalActor started:%v", ctx.Self())
 		a.inner.Init(ctx)
 	case *actor.Stopping:
-		logger.Debugf("LocalActor stopping:%v", ctx.Self())
+		glog.Debugf("LocalActor stopping:%v", ctx.Self())
 		a.inner.Terminate(ctx)
 	case *actor.Stopped:
-		logger.Debugf("LocalActor stopped:%v ", ctx.Self())
+		glog.Debugf("LocalActor stopped:%v ", ctx.Self())
 	case *actor.Restarting:
-		logger.Debugf("LocalActor restarting:%v", ctx.Self())
+		glog.Debugf("LocalActor restarting:%v", ctx.Self())
 	case *pb.NextStep:
 		a.handleNextStep(ctx)
 	default:

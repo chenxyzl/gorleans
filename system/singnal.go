@@ -1,7 +1,7 @@
 package system
 
 import (
-	"github.com/chenxyzl/gorleans/logger"
+	"github.com/chenxyzl/gorleans/glog"
 	"os"
 	"os/signal"
 	"syscall"
@@ -14,7 +14,7 @@ func waitStopSignal() {
 	signal.Notify(signals, os.Interrupt, os.Kill, syscall.SIGHUP, syscall.SIGQUIT, syscall.SIGTERM, syscall.SIGINT)
 	for {
 		sig := <-signals
-		logger.Infof("get signal %s", sig.String())
+		glog.Infof("get signal %s", sig.String())
 		switch sig {
 		case syscall.SIGHUP:
 			callFuncSlice(s.reloadFs)
@@ -25,7 +25,7 @@ func waitStopSignal() {
 			//	logger.Errorf("app exit now by force...")
 			//})
 			//fmt.Println("app exit now...")
-			logger.Infof("app exit now...")
+			glog.Infof("app exit now...")
 			return
 		}
 	}

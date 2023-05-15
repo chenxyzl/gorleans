@@ -5,7 +5,7 @@ import (
 	"github.com/asynkron/protoactor-go/actor"
 	"github.com/asynkron/protoactor-go/cluster"
 	"github.com/asynkron/protoactor-go/scheduler"
-	"github.com/chenxyzl/gorleans/logger"
+	"github.com/chenxyzl/gorleans/glog"
 	"github.com/chenxyzl/gorleans/shared"
 	"os"
 	"os/exec"
@@ -41,11 +41,11 @@ func init() {
 	s.status = stateInit
 	arg0, err := exec.LookPath(os.Args[0])
 	if err != nil {
-		logger.Panic(err)
+		glog.Panic(err)
 	}
 	absExecFile, err := filepath.Abs(arg0)
 	if err != nil {
-		logger.Panic(err)
+		glog.Panic(err)
 	}
 	s.execDir, s.execFile = filepath.Split(absExecFile)
 }
@@ -64,17 +64,17 @@ func (a *S) createPid() {
 	s.pid = s.execDir + s.execFile + ".pid"
 	err := os.WriteFile(s.pid, []byte(fmt.Sprintf("%d", os.Getpid())), 0644)
 	if err != nil {
-		logger.Panic(err)
+		glog.Panic(err)
 	}
-	logger.Infof("create pid, pid:%v", s.pid)
+	glog.Infof("create pid, pid:%v", s.pid)
 }
 
 func (a *S) removePid() {
 	if a.pid != "" {
 		err := os.Remove(a.pid)
 		if err != nil {
-			logger.Error(err)
+			glog.Error(err)
 		}
-		logger.Infof("remove pid, pid:%v", s.pid)
+		glog.Infof("remove pid, pid:%v", s.pid)
 	}
 }

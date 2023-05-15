@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"github.com/asynkron/protoactor-go/actor"
 	"github.com/asynkron/protoactor-go/cluster"
-	"github.com/chenxyzl/gorleans/logger"
+	"github.com/chenxyzl/gorleans/glog"
 	pb "github.com/chenxyzl/gorleans/proto"
 	"github.com/chenxyzl/gorleans/shared"
 	"github.com/chenxyzl/gorleans/system"
@@ -35,7 +35,7 @@ func (a *GrainActor) Receive(ctx actor.Context) {
 	switch msg := ctx.Message().(type) {
 	case *actor.Started: // pass
 	case *cluster.ClusterInit:
-		logger.Debugf("GrainActor started:%v ", ctx.Self())
+		glog.Debugf("GrainActor started:%v ", ctx.Self())
 		a.ctx = cluster.NewGrainContext(ctx, msg.Identity, msg.Cluster)
 		a.inner = a.xGrainFactory(a)
 		a.inner.Init(a.ctx)
@@ -48,7 +48,7 @@ func (a *GrainActor) Receive(ctx actor.Context) {
 	case *actor.PoisonPill:
 		ctx.Stop(ctx.Self())
 	case *actor.Stopped:
-		logger.Debugf("GrainActor stopped:%v ", ctx.Self())
+		glog.Debugf("GrainActor stopped:%v ", ctx.Self())
 		a.inner.Terminate(a.ctx)
 	case actor.AutoReceiveMessage: // pass
 	case actor.SystemMessage: // pass
