@@ -2,8 +2,6 @@ package component
 
 import (
 	"fmt"
-	"github.com/asynkron/protoactor-go/actor"
-	"github.com/asynkron/protoactor-go/cluster"
 	"google.golang.org/protobuf/proto"
 	"reflect"
 	"strings"
@@ -11,9 +9,9 @@ import (
 	"unicode/utf8"
 )
 
+// var typeOfLocalContext = reflect.TypeOf(new(actor.Context)).Elem()
+// var typeOfGrainContext = reflect.TypeOf(new(cluster.GrainContext)).Elem()
 var typeOfError = reflect.TypeOf((*error)(nil)).Elem()
-var typeOfLocalContext = reflect.TypeOf(new(actor.Context)).Elem()
-var typeOfGrainContext = reflect.TypeOf(new(cluster.GrainContext)).Elem()
 var typeOfProtoMsg = reflect.TypeOf(new(proto.Message)).Elem()
 
 func IsExported(name string) bool {
@@ -22,7 +20,7 @@ func IsExported(name string) bool {
 }
 
 // isHandlerMethod decide a method is suitable handler method
-func isHandlerMethod(method reflect.Method) bool {
+func isHandlerMethod(method reflect.Method, ctxTyp reflect.Type) bool {
 	mt := method.Type
 	// Method must be exported.
 	if method.PkgPath != "" {
@@ -37,7 +35,7 @@ func isHandlerMethod(method reflect.Method) bool {
 	//mn := method.Name
 
 	//匹配参数1的类型
-	if t1 := mt.In(1); !t1.Implements(typeOfLocalContext) && !t1.Implements(typeOfGrainContext) {
+	if t1 := mt.In(1); !t1.Implements(ctxTyp) {
 		return false
 	}
 	//匹配参数2的类型 必须是proto 且名字为{mn}Req
@@ -57,12 +55,12 @@ func isHandlerMethod(method reflect.Method) bool {
 	return true
 }
 
-func SuitableHandlerMethods(typ reflect.Type, nameFunc func(string) string) map[string]*Handler {
+func SuitableHandlerMethods(typ reflect.Type, ctxTyp reflect.Type, nameFunc func(string) string) map[string]*Handler {
 	methods := make(map[string]*Handler)
 	for m := 0; m < typ.NumMethod(); m++ {
 		method := typ.Method(m)
 		mn := method.Name
-		if isHandlerMethod(method) {
+		if isHandlerMethod(method, ctxTyp) {
 			// rewrite handler name
 			if nameFunc != nil {
 				mn = nameFunc(mn)
