@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/asynkron/protoactor-go/actor"
 	"github.com/asynkron/protoactor-go/cluster"
+	"github.com/gin-gonic/gin"
 	"google.golang.org/protobuf/proto"
 	"reflect"
 	"strings"
@@ -14,6 +15,7 @@ import (
 var typeOfError = reflect.TypeOf((*error)(nil)).Elem()
 var typeOfLocalContext = reflect.TypeOf(new(actor.Context)).Elem()
 var typeOfGrainContext = reflect.TypeOf(new(cluster.GrainContext)).Elem()
+var typeOfGinContext = reflect.TypeOf(new(gin.Context)).Elem()
 var typeOfProtoMsg = reflect.TypeOf(new(proto.Message)).Elem()
 
 func IsExported(name string) bool {
@@ -37,7 +39,7 @@ func isHandlerMethod(method reflect.Method) bool {
 	//mn := method.Name
 
 	//匹配参数1的类型
-	if t1 := mt.In(1); !t1.Implements(typeOfLocalContext) && !t1.Implements(typeOfGrainContext) {
+	if t1 := mt.In(1); !t1.Implements(typeOfLocalContext) && !t1.Implements(typeOfGrainContext) && !t1.Implements(typeOfGinContext) {
 		return false
 	}
 	//匹配参数2的类型 必须是proto 且名字为{mn}Req
