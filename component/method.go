@@ -2,9 +2,6 @@ package component
 
 import (
 	"fmt"
-	"github.com/asynkron/protoactor-go/actor"
-	"github.com/asynkron/protoactor-go/cluster"
-	"github.com/gin-gonic/gin"
 	"google.golang.org/protobuf/proto"
 	"reflect"
 	"strings"
@@ -12,10 +9,6 @@ import (
 	"unicode/utf8"
 )
 
-var typeOfError = reflect.TypeOf((*error)(nil)).Elem()
-var typeOfLocalContext = reflect.TypeOf(new(actor.Context)).Elem()
-var typeOfGrainContext = reflect.TypeOf(new(cluster.GrainContext)).Elem()
-var typeOfGinContext = reflect.TypeOf(new(gin.Context)).Elem()
 var typeOfProtoMsg = reflect.TypeOf(new(proto.Message)).Elem()
 
 func IsExported(name string) bool {
@@ -24,7 +17,7 @@ func IsExported(name string) bool {
 }
 
 // isHandlerMethod decide a method is suitable handler method
-func isHandlerMethod(method reflect.Method) bool {
+func isHandlerMethod(method reflect.Method, p reflect.Type) bool {
 	mt := method.Type
 	// Method must be exported.
 	if method.PkgPath != "" {
@@ -39,7 +32,7 @@ func isHandlerMethod(method reflect.Method) bool {
 	//mn := method.Name
 
 	//匹配参数1的类型
-	if t1 := mt.In(1); !t1.Implements(typeOfLocalContext) && !t1.Implements(typeOfGrainContext) && !t1.AssignableTo(typeOfGinContext) {
+	if t1 := mt.In(1); !t1.AssignableTo(p) && !t1.AssignableTo(p.Elem()) {
 		return false
 	}
 	//匹配参数2的类型 必须是proto 且名字为{mn}Req
@@ -59,18 +52,22 @@ func isHandlerMethod(method reflect.Method) bool {
 	return true
 }
 
-func SuitableHandlerMethods(typ reflect.Type, nameFunc func(string) string) map[string]*Handler {
+func SuitableHandlerMethods[T any, C any](nameFunc func(string) string) map[string]*Handler {
+	var t = new(T)
+	var typ = reflect.TypeOf(t)
+	var c = reflect.TypeOf(new(C))
 	methods := make(map[string]*Handler)
 	for m := 0; m < typ.NumMethod(); m++ {
 		method := typ.Method(m)
 		mn := method.Name
-		if isHandlerMethod(method) {
+		if isHandlerMethod(method, c) {
 			// rewrite handler name
 			if nameFunc != nil {
 				mn = nameFunc(mn)
 			}
 			handler := &Handler{
-				Method: method,
+				Receiver: reflect.ValueOf(t),
+				Method:   method,
 			}
 			if _, ok := methods[mn]; ok {
 				err := fmt.Errorf("repeated handler, %v", mn)
