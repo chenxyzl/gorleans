@@ -32,7 +32,7 @@ func isHandlerMethod(method reflect.Method, p reflect.Type) bool {
 	//mn := method.Name
 
 	//匹配参数1的类型
-	if t1 := mt.In(1); !t1.AssignableTo(p) && !t1.AssignableTo(p.Elem()) {
+	if t1 := mt.In(1); !t1.AssignableTo(p) && !(p.Kind() == reflect.Ptr && t1.AssignableTo(p.Elem())) {
 		return false
 	}
 	//匹配参数2的类型 必须是proto 且名字为{mn}Req
