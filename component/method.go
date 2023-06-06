@@ -39,7 +39,7 @@ func isHandlerMethod(method reflect.Method) bool {
 	//mn := method.Name
 
 	//匹配参数1的类型
-	if t1 := mt.In(1); !t1.Implements(typeOfLocalContext) && !t1.Implements(typeOfGrainContext) && !t1.Implements(typeOfGinContext) {
+	if t1 := mt.In(1); !t1.Implements(typeOfLocalContext) && !t1.Implements(typeOfGrainContext) && !t1.AssignableTo(typeOfGinContext) {
 		return false
 	}
 	//匹配参数2的类型 必须是proto 且名字为{mn}Req
