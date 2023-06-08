@@ -61,6 +61,11 @@ func Errorf(template string, args ...interface{}) error {
 	return err
 }
 
+// Fatalf uses fmt.Sprintf to log a templated message, then panics.
+func Fatalf(template string, args ...interface{}) {
+	sugar.Fatalf(template, args...)
+}
+
 // Panic uses fmt.Sprintf to log a templated message, then panics.
 func Panic(err error) error {
 	sugar.Panic(err)
