@@ -30,7 +30,7 @@ func NewClusterKind(factory func(INext) IGrainActor, kindStr string, timeout tim
 // Receive ensures the lifecycle of the actor for the received message
 func (a *GrainActor) Receive(ctx actor.Context) {
 	//
-	shared.RecoverInfo(fmt.Errorf("msg:%v", ctx.Message()))
+	defer shared.RecoverInfo(fmt.Errorf("msg:%v", ctx.Message()))
 	//
 	switch msg := ctx.Message().(type) {
 	case *actor.Started: // pass

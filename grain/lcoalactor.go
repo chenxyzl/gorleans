@@ -28,7 +28,7 @@ func NewLocalKind(factory func(INext) ILocalActor, opts ...actor.PropsOption) *a
 
 func (a *LocalActor) Receive(ctx actor.Context) {
 	//
-	shared.RecoverInfo(fmt.Errorf("msg:%v", ctx.Message()))
+	defer shared.RecoverInfo(fmt.Errorf("msg:%v", ctx.Message()))
 	//
 	a.ctx = ctx
 	switch ctx.Message().(type) {
