@@ -9,6 +9,10 @@ import (
 	"github.com/asynkron/protoactor-go/scheduler"
 	"github.com/chenxyzl/gorleans/glog"
 	"github.com/robfig/cron"
+	clientv3 "go.etcd.io/etcd/client/v3"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
+	"google.golang.org/grpc/keepalive"
 	_ "net/http/pprof"
 	"time"
 )
@@ -27,15 +31,18 @@ func Run(clusterName string, remoteUrl string, etcdBaseKey string, etcdUrl []str
 	s.status = stateRunning
 	s.system = actor.NewActorSystem()
 	s.schedule = scheduler.NewTimerScheduler(s.system.Root)
-	//provider, err := etcd.NewWithConfig(etcdBaseKey, clientv3.Config{
-	//	Endpoints:   etcdUrl,
-	//	DialTimeout: time.Second * 5,
-	//})
-	//if err != nil {
-	//	logger.Panic(err)
-	//}
-	provider, _ := etcd.New()
-	config := remote.Configure("localhost", 0)
+	provider, err := etcd.NewWithConfig(etcdBaseKey, clientv3.Config{
+		Endpoints:   etcdUrl,
+		DialTimeout: time.Second * 5,
+	})
+	if err != nil {
+		glog.Panic(err)
+	}
+	//provider, _ := etcd.New()
+	config := remote.Configure(remoteUrl, 0, remote.WithDialOptions(grpc.WithKeepaliveParams(keepalive.ClientParameters{
+		Time:                10 * time.Second,
+		Timeout:             1 * time.Second,
+		PermitWithoutStream: true}), grpc.WithBlock(), grpc.WithTransportCredentials(insecure.NewCredentials())))
 	lookup := disthash.New()
 	clusterConfig := cluster.Configure(clusterName, provider, lookup, config, options...)
 	s.cluster = cluster.New(s.system, clusterConfig)
