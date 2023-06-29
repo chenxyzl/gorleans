@@ -39,10 +39,13 @@ func Run(clusterName string, remoteUrl string, etcdBaseKey string, etcdUrl []str
 		glog.Panic(err)
 	}
 	//provider, _ := etcd.New()
-	config := remote.Configure(remoteUrl, 0, remote.WithDialOptions(grpc.WithKeepaliveParams(keepalive.ClientParameters{
-		Time:                10 * time.Second,
-		Timeout:             1 * time.Second,
-		PermitWithoutStream: true}), grpc.WithBlock(), grpc.WithTransportCredentials(insecure.NewCredentials())))
+	config := remote.Configure(remoteUrl,
+		0,
+		remote.WithDialOptions(grpc.WithKeepaliveParams(keepalive.ClientParameters{PermitWithoutStream: true}),
+			grpc.WithBlock(),
+			grpc.WithTransportCredentials(insecure.NewCredentials()),
+		),
+	)
 	lookup := disthash.New()
 	clusterConfig := cluster.Configure(clusterName, provider, lookup, config, options...)
 	s.cluster = cluster.New(s.system, clusterConfig)
